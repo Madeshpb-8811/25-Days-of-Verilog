@@ -44,3 +44,12 @@ module xor_gate(
 );
   assign Y = A ^ B;
 endmodule
+
+//xnor gate logic 
+module xnor_gate(
+  input A,B,
+  output Y
+);
+  assign Y = ~(A ^ B);
+endmodule
+
