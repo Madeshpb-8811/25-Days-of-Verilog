@@ -28,3 +28,11 @@ module nand_gate(
 );
   assign Y = ~ (A & B);
 endmodule
+
+// nor gate logic
+module nor_gate(
+  input A,B,
+  output Y
+);
+  assign Y = ~ (A | B);
+endmodule
