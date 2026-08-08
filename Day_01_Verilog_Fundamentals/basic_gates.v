@@ -20,3 +20,11 @@ module not_gate(
 );
   assign Y = ~A;
 endmodule
+
+//nand gate logic 
+module nand_gate(
+  input A,B,
+  output Y
+);
+  assign Y = ~ (A & B);
+endmodule
