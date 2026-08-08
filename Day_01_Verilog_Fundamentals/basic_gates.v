@@ -12,3 +12,11 @@ module or_gate(
 );
   assign Y = A|B;
 endmodule
+
+//not gate logic
+module not_gate(
+  input A,
+  output Y
+);
+  assign Y = ~A;
+endmodule
