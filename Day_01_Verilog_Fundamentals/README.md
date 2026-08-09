@@ -49,3 +49,23 @@ Comments are used to explain code and are ignored by the compiler.
 - Created basic Verilog modules
 - Practiced continuous assignments
 - Debugged basic Verilog syntax
+## Simulation & Verification
+
+The AND gate RTL was verified using a Verilog testbench.
+
+The testbench applied all four possible input combinations and monitored the output using `$monitor`.
+
+### AND Gate Truth Table
+
+| A | B | Expected Y |
+|---|---|------------|
+| 0 | 0 | 0 |
+| 0 | 1 | 0 |
+| 1 | 0 | 0 |
+| 1 | 1 | 1 |
+
+### Simulation Result
+
+The simulation waveform confirms that the AND gate produces the expected output for all four input combinations.
+
+![AND Gate Simulation Waveform](and_gate_waveform.png)
