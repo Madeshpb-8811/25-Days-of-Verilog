@@ -68,4 +68,4 @@ The testbench applied all four possible input combinations and monitored the out
 
 The simulation waveform confirms that the AND gate produces the expected output for all four input combinations.
 
-![AND Gate Simulation Waveform](and_gate_waveform.png)
+![AND Gate Simulation Waveform](and_gate_waveform.png.png)
