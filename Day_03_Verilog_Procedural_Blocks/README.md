@@ -51,7 +51,7 @@ The one-bit comparator compares two 1-bit inputs, `A` and `B`, and produces thre
 
 ### Waveform
 
-![One-Bit Comparator Waveform](one_bit_comparator_wave.png)
+![One-Bit Comparator Waveform](one_bit_comparator/one_bit_comparator_wave.png)
 
 ---
 
@@ -88,7 +88,7 @@ A > B
 
 ### Waveform
 
-![Four-Bit Magnitude Comparator Waveform](four_bit_magnitude_comparator_wave.png)
+![Four-Bit Magnitude Comparator Waveform](four_bit_magnitude_comparator/four_bit_magnitude_comparator_wave.png)
 
 ---
 
