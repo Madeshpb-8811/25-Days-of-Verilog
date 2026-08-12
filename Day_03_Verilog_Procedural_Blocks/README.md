@@ -51,7 +51,7 @@ The one-bit comparator compares two 1-bit inputs, `A` and `B`, and produces thre
 
 ### Waveform
 
-![One-Bit Comparator Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_03_Verilog_Procedural_Blocks/one_bit_comparator/one_bit_comparator_wave.png?raw=true)                 ↓
+![One-Bit Comparator Waveform](./one_bit_comparator/one_bit_comparator_wave.png)
 
 ---
 
