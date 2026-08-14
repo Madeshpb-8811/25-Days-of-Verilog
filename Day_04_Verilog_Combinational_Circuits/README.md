@@ -42,7 +42,7 @@ For a 2-to-4 decoder:
 
 ### Waveform
 
-![2-to-4 Decoder Waveform](decoder_wave.png)
+![2-to-4 Decoder Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_04_Verilog_Combinational_Circuits/decoder/decoder_wave.png?raw=true)
 
 ---
 
@@ -75,7 +75,7 @@ Here, `A` represents the input data.
 
 ### Waveform
 
-![1-to-4 DEMUX Waveform](demux1x4.wave.png)
+![1-to-4 DEMUX Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_04_Verilog_Combinational_Circuits/demux_1x4/demux1x4.wave.png?raw=true)
 
 ---
 
@@ -104,7 +104,7 @@ For a 2-to-1 MUX:
 
 ### Waveform
 
-![2-to-1 MUX Waveform](mux_2x1%20wave.png)
+!![2-to-1 MUX Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_04_Verilog_Combinational_Circuits/mux_2x1/mux_2x1%20wave.png?raw=true)
 
 ---
 
@@ -129,7 +129,7 @@ A 4-to-1 multiplexer selects one of four inputs based on two select lines.
 
 ### Waveform
 
-![4-to-1 MUX Waveform](mux_4x1%20wave.png)
+![4-to-1 MUX Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_04_Verilog_Combinational_Circuits/mux_4x1/mux_4x1%20wave.png?raw=true)
 
 ---
 
@@ -158,7 +158,7 @@ An 8-to-1 multiplexer selects one input from eight inputs using three select lin
 
 ### Waveform
 
-![8-to-1 MUX Waveform](mux_8x1%20wave.png)
+![8-to-1 MUX Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_04_Verilog_Combinational_Circuits/mux_8x1/mux_8x1%20wave.png?raw=true)
 
 ---
 
@@ -176,7 +176,7 @@ The highest-priority active input determines the output.
 
 ### Waveform
 
-![Priority Encoder Waveform](priority_encoder_wave.png)
+![Priority Encoder Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_04_Verilog_Combinational_Circuits/priority_encoder/priority_encoder_wave.png?raw=true)
 
 ---
 
