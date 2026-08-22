@@ -2,143 +2,132 @@
 
 ## Overview
 
-On Day 9, I learned the fundamentals of **flip-flops in Verilog HDL** and implemented the four commonly used flip-flops:
+On Day 9, I learned the fundamentals of **flip-flops in Verilog HDL** and implemented four commonly used flip-flops:
 
 - D Flip-Flop
 - JK Flip-Flop
 - T Flip-Flop
 - SR Flip-Flop
 
-I also learned how flip-flops differ from latches, how **positive-edge triggering** works, how a flip-flop holds its previous state, and the difference between **synchronous and asynchronous reset**.
+I also learned about **positive-edge triggering, hold/memory behavior, synchronous reset, asynchronous reset, and the difference between latches and flip-flops**.
 
 ---
 
 ## 1. D Flip-Flop
 
-The D (Data) flip-flop stores the value of `D` at the active clock edge.
+The D flip-flop stores the value of `D` at the active clock edge.
 
-### Characteristic behavior
+### Characteristic Table
 
 | Clock | D | Q(next) |
-|------|---|---------|
+|---|---|---|
 | ↑ | 0 | 0 |
 | ↑ | 1 | 1 |
 
-### RTL concept
+### Key Learning
 
-The D flip-flop was implemented using:
-
-```verilog
-always @(posedge clk)
-```
-
-Therefore, the output changes only at the **positive edge of the clock**.
-
-### What I learned
-
-- Positive-edge triggered storage
-- `Q` follows `D` only at `posedge clk`
-- Between clock edges, `Q` retains its previous value
-- Difference between a D latch and D flip-flop
-- Writing a Verilog testbench
-- Generating a clock using `always #5 clk = ~clk`
-- Observing `D`, `CLK`, and `Q` in ModelSim
+- D flip-flop is **edge-triggered**.
+- My implementation uses `posedge clk`.
+- Q changes according to D only at the rising edge of the clock.
+- Between clock edges, Q retains its previous value.
+- Learned how to create a clock in the testbench and verify the output using ModelSim.
 
 ### Waveform
 
-![D Flip-Flop Waveform](D_Flip_Flop/d_flip_flop_wave.png)
+![D Flip-Flop Waveform](https://raw.githubusercontent.com/Madeshpb-8811/25-Days-of-Verilog/main/Day_09_Verilog_Flip_Flops/%20D_Flip_Flop/d_flip_flop_wave.png)
 
 ---
 
 ## 2. JK Flip-Flop
 
-The JK flip-flop removes the invalid condition of the basic SR flip-flop.
+The JK flip-flop provides hold, set, reset, and toggle operations.
 
-### Characteristic table
+### Characteristic Table
 
 | J | K | Q(next) | Operation |
-|---|---|---------|-----------|
+|---|---|---|---|
 | 0 | 0 | Q | Hold |
 | 0 | 1 | 0 | Reset |
 | 1 | 0 | 1 | Set |
 | 1 | 1 | ~Q | Toggle |
 
-### What I learned
+### Key Learning
 
-- `J=0, K=0` → previous Q is retained
-- `J=0, K=1` → reset
-- `J=1, K=0` → set
-- `J=1, K=1` → toggle
-- JK flip-flop is edge-triggered in my implementation
-- How feedback through `~Q` produces the toggle operation
+- `J=0, K=0` → Q holds its previous value.
+- `J=0, K=1` → Q resets to 0.
+- `J=1, K=0` → Q sets to 1.
+- `J=1, K=1` → Q toggles.
+- JK flip-flop does not have the invalid state of the basic SR flip-flop.
+- Learned how feedback using `~Q` produces the toggle operation.
 
 ### Waveform
 
-![JK Flip-Flop Waveform](JK_Flip_Flop/jk_flip_flop_wave.png)
+![JK Flip-Flop Waveform](https://raw.githubusercontent.com/Madeshpb-8811/25-Days-of-Verilog/main/Day_09_Verilog_Flip_Flops/JK_Flip_Flop/jk_flip_flop%20wave.png)
 
 ---
 
 ## 3. T Flip-Flop
 
-The T (Toggle) flip-flop is mainly used for toggling and counting applications.
+The T flip-flop is mainly used for toggling, counting, and frequency-divider applications.
 
-### Characteristic table
+### Characteristic Table
 
 | T | Q(next) | Operation |
-|---|---------|-----------|
+|---|---|---|
 | 0 | Q | Hold |
 | 1 | ~Q | Toggle |
 
-### What I learned
+### Key Learning
 
-- `T=0` → Q holds its previous value
-- `T=1` → Q toggles on every positive clock edge
-- A T flip-flop can be derived from a JK flip-flop by setting `J=K=T`
-- Flip-flops can be used to build counters and frequency-divider circuits
-- Implemented reset behavior and verified it using ModelSim
+- `T=0` → Q holds its previous value.
+- `T=1` → Q toggles at every positive clock edge.
+- A T flip-flop can be obtained from a JK flip-flop by connecting `J=K=T`.
+- Learned how flip-flops can be used as building blocks for counters.
 
 ### Waveform
 
-![T Flip-Flop Waveform](T_Flip_Flop/t_flip_flop_wave.png)
+![T Flip-Flop Waveform](https://raw.githubusercontent.com/Madeshpb-8811/25-Days-of-Verilog/main/Day_09_Verilog_Flip_Flops/T_Flip_Flop/t_flip_flop%20wave.png)
 
 ---
 
 ## 4. SR Flip-Flop
 
-The SR (Set-Reset) flip-flop has separate Set and Reset inputs.
+The SR flip-flop has separate Set and Reset inputs.
 
-### Characteristic table
+### Characteristic Table
 
 | S | R | Q(next) | Operation |
-|---|---|---------|-----------|
+|---|---|---|---|
 | 0 | 0 | Q | Hold / Memory |
 | 0 | 1 | 0 | Reset |
 | 1 | 0 | 1 | Set |
 | 1 | 1 | X | Invalid |
 
-### What I learned
+### Key Learning
 
-- `S=0, R=0` → Q retains its previous value
-- `S=0, R=1` → Reset Q to 0
-- `S=1, R=0` → Set Q to 1
-- `S=1, R=1` → Invalid/forbidden condition
-- The SR flip-flop is positive-edge triggered in my implementation
-- An unassigned Q inside a clocked `always` block can retain its previous state
-- The invalid condition was represented as `1'bx` for simulation
+- `S=0, R=0` → Q retains its previous value.
+- `S=0, R=1` → Q becomes 0.
+- `S=1, R=0` → Q becomes 1.
+- `S=1, R=1` → Invalid condition.
+- The invalid condition was represented using `1'bx` during simulation.
+- Learned that when a clocked `always @(posedge clk)` block does not assign Q, Q retains its previous state.
+- This is a **flip-flop hold condition**, not a latch.
 
 ### Waveform
 
-![SR Flip-Flop Waveform](SR_Flip_Flop/sr_flip_flop_wave.png)
+![SR Flip-Flop Waveform](https://raw.githubusercontent.com/Madeshpb-8811/25-Days-of-Verilog/main/Day_09_Verilog_Flip_Flops/SR_Flip_Flop/sr_flip_flop%20wave.png)
 
 ---
 
-# Synchronous vs Asynchronous Operation
+# Synchronous and Asynchronous Reset
 
-## Synchronous
+One of the important concepts I learned on Day 9 was the difference between **synchronous and asynchronous reset**.
 
-A synchronous reset or control signal is acted upon **only at the active clock edge**.
+## Synchronous Reset
 
-For example:
+A synchronous reset is checked only at the active clock edge.
+
+Example:
 
 ```verilog
 always @(posedge clk)
@@ -148,11 +137,23 @@ begin
 end
 ```
 
-Here, even if `rst` changes between clock edges, Q changes only when the next `posedge clk` occurs.
+If `rst` becomes active between clock edges, Q does not immediately change. The reset takes effect at the next `posedge clk`.
+
+### In simple terms
+
+```text
+RESET changes
+      ↓
+Wait for clock edge
+      ↓
+Q changes
+```
+
+---
 
 ## Asynchronous Reset
 
-An asynchronous reset does **not wait for the clock**.
+An asynchronous reset does not depend on the clock.
 
 For an active-high asynchronous reset:
 
@@ -172,91 +173,80 @@ The important part is:
 or posedge rst
 ```
 
-This makes the reset sensitive to the rising edge of `rst`.
+This adds the reset event to the sensitivity list.
 
-### What I understood
+If `rst` becomes `1` while the clock is not changing, Q can immediately become `0`.
 
-If `rst` becomes `1` while the clock is not changing:
+### In simple terms
 
 ```text
-RST ↑
- ↓
+RESET ↑
+  ↓
 Q immediately becomes 0
 ```
 
-It does **not** wait for the next `posedge clk`.
+It does **not** wait for the next clock edge.
 
 I implemented and verified this asynchronous-reset behavior while working with the T flip-flop.
 
 ---
 
-# Are These Flip-Flops Synchronous?
+# Are the Flip-Flops Synchronous?
 
-The basic flip-flop RTL implementations in this Day 9 work are **positive-edge triggered**:
+The basic flip-flop implementations in this Day 9 work use:
 
 ```verilog
 always @(posedge clk)
 ```
 
-Therefore:
+Therefore, they are **positive-edge-triggered flip-flops**.
 
-| Flip-Flop | Triggering | Reset in current basic implementation |
-|-----------|------------|----------------------------------------|
-| D | Positive-edge (`posedge clk`) | Reset concepts explored separately |
-| JK | Positive-edge (`posedge clk`) | No reset in basic RTL |
-| T | Positive-edge (`posedge clk`) | Asynchronous reset explored/implemented |
-| SR | Positive-edge (`posedge clk`) | No reset in basic RTL |
+| Flip-Flop | Triggering | Reset / Additional Concept |
+|---|---|---|
+| D | Positive-edge | Clocked operation |
+| JK | Positive-edge | Hold, set, reset, toggle |
+| T | Positive-edge | Asynchronous reset explored |
+| SR | Positive-edge | Hold, set, reset, invalid state |
 
-**Important:** "Synchronous" here refers to a reset/control action being evaluated with the clock. The flip-flops themselves are **edge-triggered**, not level-sensitive like latches.
-
----
-
-# Flip-Flop Comparison
-
-| Flip-Flop | Inputs | Hold | Set | Reset | Toggle | Invalid |
-|-----------|--------|------|-----|-------|--------|---------|
-| D | D | — | D=1 | D=0 | — | None |
-| JK | J, K | 00 | 10 | 01 | 11 | None |
-| T | T | 0 | — | — | 1 | None |
-| SR | S, R | 00 | 10 | 01 | — | 11 |
+**Important:** A flip-flop being edge-triggered is different from saying that its reset is synchronous. The reset type depends on how reset is included in the sensitivity list.
 
 ---
 
 # Latch vs Flip-Flop
 
-One of the important concepts I learned is the difference between a latch and a flip-flop.
+I also learned the difference between a latch and a flip-flop.
 
 ### Latch
 
 A latch is **level-sensitive**.
 
-Example:
+For example, a D latch responds while its enable signal is active.
 
-```verilog
-always @(*)
+```text
+Latch → Level sensitive
 ```
-
-or a sensitivity condition involving an enable signal.
-
-The output can respond while the enable level is active.
 
 ### Flip-Flop
 
-A flip-flop is **edge-triggered**.
+A flip-flop is **edge-sensitive**.
 
-Example:
+For example:
 
 ```verilog
 always @(posedge clk)
 ```
 
-The output changes only at the specified clock edge.
-
-### Main difference
+responds only at the rising edge of the clock.
 
 ```text
-Latch       → Level sensitive
-Flip-Flop   → Edge sensitive
+Flip-Flop → Edge sensitive
+```
+
+### Main Difference
+
+```text
+Latch       → responds to a level
+Flip-Flop   → responds to an edge
 ```
 
 ---
@@ -267,7 +257,7 @@ During Day 9, I practiced:
 
 - Module declaration
 - Input and output ports
-- `reg` output for procedural assignments
+- `reg` outputs for procedural assignments
 - `always` blocks
 - `posedge`
 - Non-blocking assignment (`<=`)
@@ -278,7 +268,9 @@ During Day 9, I practiced:
 - DUT instantiation
 - Testbench stimulus
 - Waveform analysis in ModelSim
-- `1'b0`, `1'b1`, and `1'bx`
+- `1'b0`
+- `1'b1`
+- `1'bx`
 - Hold/memory behavior
 - Synchronous reset
 - Asynchronous reset
@@ -289,40 +281,54 @@ During Day 9, I practiced:
 
 Each flip-flop was tested using a dedicated Verilog testbench and simulated using **ModelSim**.
 
-The testbenches generated a clock and applied different input combinations to verify:
+The testbenches were used to verify:
 
 - Set
 - Reset
 - Hold
 - Toggle
-- Invalid condition for SR
-- Reset behavior
+- Invalid SR condition
 - Positive-edge triggering
+- Reset behavior
+- Previous-state retention
 
-The waveforms were inspected manually to confirm that the RTL behaved according to the characteristic tables.
+The generated waveforms were checked against the characteristic tables to confirm the RTL behavior.
+
+---
+
+# Flip-Flop Comparison
+
+| Flip-Flop | Inputs | Hold | Set | Reset | Toggle | Invalid |
+|---|---|---|---|---|---|---|
+| D | D | — | D=1 | D=0 | — | None |
+| JK | J, K | 00 | 10 | 01 | 11 | None |
+| T | T | 0 | — | — | 1 | None |
+| SR | S, R | 00 | 10 | 01 | — | 11 |
 
 ---
 
 # Key Takeaways
 
-1. A **D flip-flop** stores one data bit.
-2. A **JK flip-flop** provides set, reset, hold, and toggle operations without an invalid input combination.
-3. A **T flip-flop** toggles when `T=1` and holds when `T=0`.
-4. An **SR flip-flop** has set, reset, hold, and an invalid `S=R=1` condition.
-5. `always @(posedge clk)` describes positive-edge-triggered behavior.
-6. A clocked block can retain the previous value when no assignment occurs.
-7. A **synchronous reset** waits for the clock edge.
-8. An **asynchronous reset** can change Q immediately when the reset event occurs.
+1. **D flip-flop** stores one bit of data.
+2. **JK flip-flop** provides hold, set, reset, and toggle operations.
+3. **T flip-flop** toggles when `T=1` and holds when `T=0`.
+4. **SR flip-flop** provides set, reset, and hold, but `S=R=1` is invalid.
+5. `always @(posedge clk)` describes positive-edge-triggered sequential logic.
+6. A clocked `always` block can retain the previous value when no assignment occurs.
+7. A **synchronous reset** waits for the active clock edge.
+8. An **asynchronous reset** can affect Q immediately when the reset event occurs.
 9. Non-blocking assignment (`<=`) is used for sequential logic.
-10. ModelSim waveforms are useful for verifying RTL behavior.
+10. ModelSim waveforms can be used to verify RTL behavior.
+11. Latches are level-sensitive, while flip-flops are edge-triggered.
 
 ---
 
-## Day 9 Completed
+# Day 9 Completed
 
 **Topic:** Verilog Flip-Flops  
 **Tools:** Verilog HDL, ModelSim  
-**Simulation:** Functional RTL simulation  
-**Flip-Flops Covered:** D, JK, T, SR
+**Simulation:** RTL functional simulation  
+**Flip-Flops Covered:** D, JK, T, SR  
+**Additional Concepts:** Synchronous Reset, Asynchronous Reset, Hold Behavior, Positive-Edge Triggering
 
-This completes my Day 9 study of sequential logic and flip-flops.
+Day 9 completes my study of the basic flip-flops and strengthens my understanding of sequential logic in Verilog.
