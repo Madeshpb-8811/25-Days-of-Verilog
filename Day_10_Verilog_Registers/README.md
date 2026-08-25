@@ -11,6 +11,7 @@ The main concepts implemented and simulated today were:
 - SISO – Serial In Serial Out
 - SIPO – Serial In Parallel Out
 - PISO – Parallel In Serial Out
+- Universal Shift Register
 
 Each design was written in Verilog RTL, tested using a separate testbench, simulated in ModelSim, and verified using waveform outputs.
 
@@ -20,8 +21,6 @@ Each design was written in Verilog RTL, tested using a separate testbench, simul
 
 An 8-bit register stores an 8-bit value and updates its contents on the active clock edge.
 
-The basic RTL behavior was:
-
 ```text
 posedge CLK:
     EN = 1 → Q loads D
@@ -29,8 +28,6 @@ posedge CLK:
 ```
 
 ### Enable concept
-
-The enable signal controls whether the register is allowed to load new data.
 
 ```verilog
 always @(posedge clk)
@@ -42,11 +39,9 @@ end
 
 When `en = 1`, the input data is stored in `q` at the next positive clock edge.
 
-When `en = 0`, there is no assignment to `q`, so the register retains its previous value.
+When `en = 0`, the register retains its previous value.
 
 ### Without enable
-
-Without an enable signal:
 
 ```verilog
 always @(posedge clk)
@@ -54,8 +49,6 @@ always @(posedge clk)
 ```
 
 The register loads the input on every positive clock edge.
-
-Therefore:
 
 ```text
 With enable:
@@ -173,8 +166,6 @@ PISO means **Parallel In Serial Out**.
 
 First, an entire parallel value is loaded into the register. After that, the stored bits are shifted out one at a time.
 
-The two operations are controlled by `load`:
-
 ```text
 LOAD = 1 → Parallel load
 LOAD = 0 → Shift right
@@ -192,32 +183,80 @@ The serial output captures the bit being shifted out:
 serial_out <= register[0];
 ```
 
-For example, after loading:
-
-```text
-1011
-```
-
-the data is shifted out as:
-
-```text
-1 → 1 → 0 → 1
-```
-
-### Important point about non-blocking assignments
-
-Because both statements use `<=` inside the same clocked `always` block:
-
-```verilog
-serial_out <= register[0];
-register <= {1'b0, register[3], register[2], register[1]};
-```
-
-`serial_out` receives the **old `register[0]` value**, while the register simultaneously shifts. This allows the bit being shifted out to be captured correctly.
+Because both statements use `<=` inside the same clocked `always` block, `serial_out` receives the **old `register[0]` value** while the register simultaneously shifts.
 
 ### Waveform
 
 ![PISO Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_10_Verilog_Registers/PISO/piso%20wave.png?raw=true)
+
+---
+
+## 6. Universal Shift Register
+
+A **Universal Shift Register** combines multiple register operations into a single design. It can hold its current value, shift in either direction, or load data in parallel.
+
+The operations are selected using a 2-bit control signal:
+
+```text
+SELECT = 00 → Hold
+SELECT = 01 → Shift Right
+SELECT = 10 → Shift Left
+SELECT = 11 → Parallel Load
+```
+
+### RTL concept
+
+```verilog
+case(select)
+    2'b01: q <= {serial_right,q[3],q[2],q[1]};
+    2'b10: q <= {q[2],q[1],q[0],serial_left};
+    2'b11: q <= parallel_in;
+endcase
+```
+
+When `SELECT = 00`, no assignment is made to `q`, so the register holds its previous value.
+
+### Operations
+
+**Hold — `SELECT = 00`**
+
+```text
+Q → Q
+```
+
+**Shift Right — `SELECT = 01`**
+
+```verilog
+q <= {serial_right,q[3],q[2],q[1]};
+```
+
+Example:
+
+```text
+0110 → 1011 → 0101
+```
+
+**Shift Left — `SELECT = 10`**
+
+```verilog
+q <= {q[2],q[1],q[0],serial_left};
+```
+
+Example:
+
+```text
+0101 → 1011 → 0110
+```
+
+**Parallel Load — `SELECT = 11`**
+
+```verilog
+q <= parallel_in;
+```
+
+### Waveform
+
+![Universal Shift Register Waveform](https://github.com/Madeshpb-8811/25-Days-of-Verilog/blob/main/Day_10_Verilog_Registers/Universal_Shift_Register/universal_shift_register%20wave.png?raw=true)
 
 ---
 
@@ -231,7 +270,7 @@ All of today's sequential designs were based around:
 always @(posedge clk)
 ```
 
-This means the register or shift register updates only on the **rising edge of the clock**.
+The register or shift register updates only on the **rising edge of the clock**.
 
 ## 2. Non-blocking assignment
 
@@ -261,15 +300,7 @@ This is especially useful for shift registers.
 
 ## 4. Hold behavior
 
-A register does not need an explicit:
-
-```verilog
-q <= q;
-```
-
-to hold its previous value when an enable condition is false.
-
-For example:
+A register does not need an explicit `q <= q;` to hold its previous value when an enable condition is false.
 
 ```verilog
 always @(posedge clk)
@@ -281,18 +312,16 @@ end
 
 When `en = 0`, the register retains its previous value.
 
+The same principle was used in the Universal Shift Register when `SELECT = 00`.
+
 ## 5. Enable vs no enable
 
-### Enabled register
-
 ```text
+Enabled register:
 EN = 1 → Load input
 EN = 0 → Hold previous value
-```
 
-### Register without enable
-
-```text
+Register without enable:
 Every posedge → Load input
 ```
 
@@ -303,14 +332,13 @@ Parallel → Multiple bits move together
 Serial   → One bit moves per clock
 ```
 
-This led to understanding:
-
 | Register | Input | Output |
 |---|---|---|
 | PIPO | Parallel | Parallel |
 | SISO | Serial | Serial |
 | SIPO | Serial | Parallel |
 | PISO | Parallel | Serial |
+| Universal Shift Register | Serial / Parallel | Parallel |
 
 ## 7. Shift direction
 
@@ -329,9 +357,26 @@ Q1 ← Old Q2
 Q0 ← Old Q1
 ```
 
-Understanding shift direction was an important part of today's practice.
+The Universal Shift Register extended this concept by allowing both left and right shifting.
 
-## 8. Testbench and waveform verification
+## 8. Select-based control
+
+The Universal Shift Register introduced a 2-bit control signal:
+
+```text
+SELECT[1:0]
+```
+
+```text
+00 → Hold
+01 → Shift Right
+10 → Shift Left
+11 → Parallel Load
+```
+
+This showed how multiple operations can be controlled using a small amount of control logic.
+
+## 9. Testbench and waveform verification
 
 I continued practicing the RTL workflow:
 
@@ -355,9 +400,11 @@ I also learned that testbench inputs should be changed away from the active cloc
 
 # 📚 Day 10 Summary
 
-Today I moved from individual flip-flops to **multi-bit registers and shift registers**. I learned how an 8-bit register stores data, how an enable controls loading, and how registers can be configured for different serial and parallel data-transfer methods.
+Today I moved from individual flip-flops to **multi-bit registers and different types of shift registers**. I learned how an 8-bit register stores data, how an enable controls loading, and how registers can be configured for serial and parallel data transfer.
 
-The most important learning from today was understanding that **shift registers are built from storage elements and controlled movement of bits**, with the direction and input/output arrangement determining whether the design is PIPO, SISO, SIPO, or PISO.
+I also implemented a **Universal Shift Register**, which combined the concepts learned from the individual shift registers into one design capable of holding, shifting left, shifting right, and parallel loading data.
+
+The most important learning from today was understanding that **shift registers are built from storage elements and controlled movement of bits**, while control signals determine how the stored data should move.
 
 All designs were implemented in Verilog and verified through ModelSim waveforms.
 
@@ -370,20 +417,22 @@ All designs were implemented in Verilog and verified through ModelSim waveforms.
 - ✅ SISO
 - ✅ SIPO
 - ✅ PISO
+- ✅ Universal Shift Register
 - ✅ Testbench writing
 - ✅ ModelSim waveform verification
 - ✅ Concatenation and shifting
 - ✅ Non-blocking assignments in sequential logic
+- ✅ Select-based control using `case`
+- ✅ Hold, shift-left, shift-right and parallel-load operations
+
+---
+
+## 🎯 Day 10 Complete
+
+**Registers → Shift Registers → Universal Shift Register**
+
+The Universal Shift Register completes the register and shift-register portion of the learning plan.
 
 ### Next
 
-**Universal Shift Register**
-
-The Universal Shift Register will combine multiple operations:
-
-```text
-00 → Hold
-01 → Shift Right
-10 → Shift Left
-11 → Parallel Load
-```
+**Day 11 – Verilog Counters**
