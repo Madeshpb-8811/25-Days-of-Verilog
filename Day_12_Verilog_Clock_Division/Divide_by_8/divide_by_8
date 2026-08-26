@@ -1,0 +1,25 @@
+module divide_by_8 (   
+input clk,rst,   
+output reg q);    
+reg [1:0]count;   
+   
+always @(posedge clk)   
+begin   
+   
+   
+   if(rst)   
+    begin   
+   
+     q<=1'b0;   
+     count<=2'b00;   
+     end   
+   
+   else if(count== 2'b11)   
+     begin   
+     q<=~q;   
+      count<=2'b00;   
+     end   
+  else   
+   count<=count+1'b1;   
+end   
+endmodule
